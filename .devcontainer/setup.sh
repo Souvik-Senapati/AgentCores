@@ -32,12 +32,12 @@ echo "Node.js version: $(node --version)"
 echo "npm version: $(npm --version)"
 echo "Python version: $(python3 --version)"
 echo "Docker version: $(docker --version)"
-echo "Docker Compose version: $(docker-compose --version)"
+echo "Docker Compose version: $(docker compose version)"
 
 # Set up Python environment
 echo "🐍 Setting up Python environment..."
 python3 -m pip install --upgrade pip
-pip3 install -r backend/requirements.txt
+python3 -m pip install -r backend/requirements.txt
 
 # Set up frontend environment
 echo "⚛️  Setting up Frontend environment..."
@@ -54,7 +54,7 @@ fi
 
 # Set proper permissions
 echo "🔐 Setting permissions..."
-chmod +x *.bat
+chmod +x *.bat || true
 chmod +x .devcontainer/setup.sh
 
 # Create workspace-specific scripts
@@ -66,7 +66,7 @@ cat > start-codespace.sh << 'EOF'
 echo "🚀 Starting AgentCores in GitHub Codespaces..."
 
 # Start services
-docker-compose up -d
+docker compose up -d
 
 # Wait for services to be ready
 echo "⏳ Waiting for services to start..."
@@ -91,7 +91,7 @@ chmod +x start-codespace.sh
 cat > stop-codespace.sh << 'EOF'
 #!/bin/bash
 echo "🛑 Stopping AgentCores services..."
-docker-compose down
+docker compose down
 echo "✅ All services stopped"
 EOF
 
