@@ -3,7 +3,7 @@
   "dockerComposeFile": "../docker-compose.yml",
   "service": "backend",
   "workspaceFolder": "/workspace",
-  
+
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": true,
@@ -66,25 +66,18 @@
   },
 
   "forwardPorts": [3000, 8000, 5432, 6379],
+
   "portsAttributes": {
-    "3000": {
-      "label": "Frontend (React)",
-      "onAutoForward": "openPreview"
-    },
-    "8000": {
-      "label": "Backend (FastAPI)",
-      "onAutoForward": "openBrowser"
-    },
-    "5432": {
-      "label": "PostgreSQL Database"
-    },
-    "6379": {
-      "label": "Redis Cache"
-    }
+    "3000": { "label": "Frontend (React)", "onAutoForward": "openPreview" },
+    "8000": { "label": "Backend (FastAPI)", "onAutoForward": "openBrowser" },
+    "5432": { "label": "PostgreSQL Database" },
+    "6379": { "label": "Redis Cache" }
   },
 
   "postCreateCommand": "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh",
-  "postStartCommand": "docker-compose up -d",
+  
+  // Use plugin form: "docker compose" (space) instead of old docker-compose
+  "postStartCommand": "docker compose up -d",
 
   "remoteUser": "vscode",
   "containerEnv": {
