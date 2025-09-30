@@ -2,7 +2,7 @@
   "name": "AgentCores Development Environment",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "backend",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspaces/AgentCores",  
 
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
@@ -48,7 +48,7 @@
         "humao.rest-client"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/usr/bin/python3",
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": true,
         "python.formatting.provider": "black",
@@ -66,7 +66,6 @@
   },
 
   "forwardPorts": [3000, 8000, 5432, 6379],
-
   "portsAttributes": {
     "3000": { "label": "Frontend (React)", "onAutoForward": "openPreview" },
     "8000": { "label": "Backend (FastAPI)", "onAutoForward": "openBrowser" },
@@ -75,9 +74,14 @@
   },
 
   "postCreateCommand": "chmod +x .devcontainer/setup.sh && ./.devcontainer/setup.sh",
-  
-  // Use plugin form: "docker compose" (space) instead of old docker-compose
   "postStartCommand": "docker compose up -d",
+
+  // **Critical extras for DinD compatibility**
+  "runArgs": [
+    "--privileged",
+    "--volume", "/var/lib/docker",
+    "--volume", "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  ],
 
   "remoteUser": "vscode",
   "containerEnv": {
