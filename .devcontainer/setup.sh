@@ -19,17 +19,14 @@ sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
     gnupg \
-    lsb-release
-
-# Install Node.js 18 (for frontend)
-echo "📦 Installing Node.js 18..."
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
+    lsb-release \
+    python3-pip \
+    python3-venv
 
 # Verify installations
 echo "✅ Verifying installations..."
-echo "Node.js version: $(node --version)"
-echo "npm version: $(npm --version)"
+echo "Node.js version: $(node --version || echo 'Not installed here, using Codespaces feature')"
+echo "npm version: $(npm --version || echo 'Not installed here, using Codespaces feature')"
 echo "Python version: $(python3 --version)"
 echo "Docker version: $(docker --version)"
 echo "Docker Compose version: $(docker compose version)"
@@ -37,7 +34,7 @@ echo "Docker Compose version: $(docker compose version)"
 # Set up Python environment
 echo "🐍 Setting up Python environment..."
 python3 -m pip install --upgrade pip
-python3 -m pip install -r backend/requirements.txt
+pip3 install -r backend/requirements.txt
 
 # Set up frontend environment
 echo "⚛️  Setting up Frontend environment..."
@@ -54,25 +51,22 @@ fi
 
 # Set proper permissions
 echo "🔐 Setting permissions..."
+chmod +x .devcontainer/setup.sh || true
 chmod +x *.bat || true
-chmod +x .devcontainer/setup.sh
 
-# Create workspace-specific scripts
+# Create workspace scripts
 echo "📜 Creating workspace scripts..."
 
-# Create start script
+# Start script
 cat > start-codespace.sh << 'EOF'
 #!/bin/bash
 echo "🚀 Starting AgentCores in GitHub Codespaces..."
 
-# Start services
 docker compose up -d
 
-# Wait for services to be ready
 echo "⏳ Waiting for services to start..."
 sleep 10
 
-# Check service health
 echo "🏥 Checking service health..."
 curl -f http://localhost:8000/health || echo "❌ Backend not ready yet"
 curl -f http://localhost:3000 || echo "❌ Frontend not ready yet"
@@ -81,23 +75,19 @@ echo ""
 echo "🎉 AgentCores is starting up!"
 echo "Frontend: https://$CODESPACE_NAME-3000.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"
 echo "Backend API: https://$CODESPACE_NAME-8000.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"
-echo ""
-echo "📖 Check the README.md for usage instructions"
 EOF
-
 chmod +x start-codespace.sh
 
-# Create stop script
+# Stop script
 cat > stop-codespace.sh << 'EOF'
 #!/bin/bash
 echo "🛑 Stopping AgentCores services..."
 docker compose down
 echo "✅ All services stopped"
 EOF
-
 chmod +x stop-codespace.sh
 
 echo ""
 echo "🎉 Setup complete!"
 echo "🚀 Run './start-codespace.sh' to start the application"
-echo "📖 Check CODESPACES_GUIDE.md for detailed instructions"
+echo "📖 Check CODESPACES_GUIDE.md for usage instructions"
